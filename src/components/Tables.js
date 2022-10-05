@@ -19,26 +19,63 @@ const Tables = (props) => {
   const formEmailHandler = (event) => {
     setEmail(event.target.value);
   };
-  const addUserHandler = () => {
-    let firstName;
-    let lastName;
-    if (fullName.includes(" ")) {
-      // { firstName, lastName } = fullName.split(" ");x
-    } else {
-      firstName = fullName;
+  const userValidation = () => {
+    if (!url || url.slice(0, 4) !== "http") {
+      alert("Please enter a valid url Ex - http://xyz....");
+      return false;
     }
-    let newUser = {
-      id: Math.ceil(Math.random() * 100),
-      email: email,
-      first_name: firstName,
-      last_name: lastName,
-      avatar: url,
-    };
-    console.log(`Table.js :: addUserHandler :: newUser`, newUser);
-    props.setNewUser(newUser);
-    setEmail("");
-    setUrl("");
-    setFullName("");
+    let name = fullName.split(" ");
+    console.log(`table.js :: userValidation :: fullName`, name[1]);
+    if (
+      !fullName ||
+      fullName.length < 3 ||
+      !fullName.includes(" ") ||
+      name[0].length < 3 ||
+      name[1].length < 3 ||
+      fullName
+        .split("")
+        .some((element) =>
+          ["!", "#", "$", "%", "^", "&", "*", "@", "("].includes(element)
+        )
+    ) {
+      alert("Please enter your full name (min 3 char)-> first_name last_name");
+      return false;
+    }
+    if (
+      !email ||
+      email.length < 3 ||
+      !email.includes("@") ||
+      email
+        .split("")
+        .some((element) =>
+          ["!", "#", " ", "$", "%", "^", "&", "*"].includes(element)
+        )
+    ) {
+      alert("Please enter a valid email id with min 3 char");
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const addUserHandler = () => {
+    let isValidate = userValidation();
+    if (isValidate) {
+      let name = fullName.split(" ");
+      let newUser = {
+        id: Math.ceil(Math.random() * 100),
+        email: email,
+        first_name: name[0],
+        last_name: name[1],
+        avatar: url,
+      };
+      console.log(`Table.js :: addUserHandler :: newUser`, newUser);
+      props.setNewUser(newUser);
+      setEmail("");
+      setUrl("");
+      setFullName("");
+    } else {
+      console.log("Validation failed");
+    }
   };
   return (
     <div>
@@ -98,7 +135,7 @@ const Tables = (props) => {
                       <img src={element.avatar} alt="Profile pic"></img>
                     </th>
                     <td>{element.id}</td>
-                    <td>{element.first_name + element.last_name}</td>
+                    <td>{element.first_name + " " + element.last_name}</td>
                     <td>@{element.email}</td>
                   </tr>
                 );
