@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Mr-Apoorv/userList/static/css/main.073c9b0a.css",
+    "main.js": "/Mr-Apoorv/userList/static/js/main.10dd823c.js",
+    "static/js/787.e26fcb3a.chunk.js": "/Mr-Apoorv/userList/static/js/787.e26fcb3a.chunk.js",
+    "index.html": "/Mr-Apoorv/userList/index.html",
+    "main.073c9b0a.css.map": "/Mr-Apoorv/userList/static/css/main.073c9b0a.css.map",
+    "main.10dd823c.js.map": "/Mr-Apoorv/userList/static/js/main.10dd823c.js.map",
+    "787.e26fcb3a.chunk.js.map": "/Mr-Apoorv/userList/static/js/787.e26fcb3a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.10dd823c.js"
+  ]
+}
