@@ -74,6 +74,19 @@ function App() {
 
   console.log(`App.js :: main :: newUser`, newUser);
 
+  const [mode, setMode] = useState("light");
+  const handleToggleMode = () => {
+    if (mode === "light") {
+      setMode("dark");
+      document.body.style.backgroundColor = "#042743";
+      document.body.style.color = "white";
+    } else {
+      setMode("light");
+      document.body.style.backgroundColor = "white";
+      document.body.style.color = "black";
+    }
+  };
+
   /**
    * Function name - fetchUsers
    * Function work - Fetch user list with GET request
@@ -248,7 +261,7 @@ function App() {
 
   return (
     <div>
-      <NavBar />
+      <NavBar mode={mode} toggleMode={handleToggleMode} />
       <h1 className="text-center my-3">User List</h1>
       <div className="container my-4">
         <Sort setSelectedOptionValue={setSelectedOptionValue} />
@@ -256,6 +269,7 @@ function App() {
           tableData={userlist}
           selectedOptionValue={selectedOptionValue}
           setNewUser={setNewUser}
+          mode={mode}
         />
       </div>
     </div>

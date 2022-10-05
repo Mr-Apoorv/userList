@@ -107,7 +107,7 @@ const Tables = (props) => {
       <div className="container text-left">
         <button
           type="button"
-          className="btn btn-dark my-3"
+          className={`btn btn-${props.mode === "dark" ? "light" : "dark"} my-3`}
           onClick={addUserHandler}
         >
           Add User
@@ -119,7 +119,12 @@ const Tables = (props) => {
       </div>
 
       {props.tableData && (
-        <table className="table table-bordered border-dark">
+        <table
+          className={`table table-bordered border-${
+            props.mode === "dark" ? "light" : "dark"
+          } `}
+          style={{ color: props.mode === "dark" ? "white" : "black" }}
+        >
           <thead>
             <tr>
               <th scope="col">Profile Pic</th>
