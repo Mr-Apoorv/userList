@@ -16,6 +16,15 @@ const Tables = (props) => {
   const [email, setEmail] = useState("");
 
   /**
+   * Function name - invokeError
+   * Function work - change the error status to true and show error message on DOM
+   * Params - {object} - error - details of error details
+   */
+  const invokeError = (error) => {
+    props.setIsError(true);
+    props.setErrMssg(error.message);
+  };
+  /**
    * Function name - formUrlHandler | formNameHandler | formEmailHandler
    * Function work - change the input fields value to the keyboard input entered by user
    * Params - {object} - event - event received when keyboard input given by user
@@ -37,41 +46,54 @@ const Tables = (props) => {
    * Params - None
    */
   const userValidation = () => {
-    if (url && url.slice(0, 4) !== "http") {
-      alert("Please enter a valid url Ex - http://xyz....");
-      return false;
-    }
-    let name = fullName.split(" ");
-    console.log(`table.js :: userValidation :: fullName`, name[1]);
-    if (
-      !fullName ||
-      fullName.length < 3 ||
-      !fullName.includes(" ") ||
-      name[0].length < 3 ||
-      name[1].length < 3 ||
-      fullName
-        .split("")
-        .some((element) =>
-          ["!", "#", "$", "%", "^", "&", "*", "@", "("].includes(element)
-        )
-    ) {
-      alert("Please enter your full name (min 3 char)-> first_name last_name");
-      return false;
-    }
-    if (
-      !email ||
-      email.length < 3 ||
-      !email.includes("@") ||
-      email
-        .split("")
-        .some((element) =>
-          ["!", "#", " ", "$", "%", "^", "&", "*"].includes(element)
-        )
-    ) {
-      alert("Please enter a valid email id with min 3 char");
-      return false;
-    } else {
-      return true;
+    try {
+      // throw new Error(
+      //   "Error world : Manually created error to test error handling"
+      // );
+      if (url && url.slice(0, 4) !== "http") {
+        alert("Please enter a valid url Ex - http://xyz....");
+        return false;
+      }
+      let name = fullName.split(" ");
+      console.log(`table.js :: userValidation :: fullName`, name[1]);
+      if (
+        !fullName ||
+        fullName.length < 3 ||
+        !fullName.includes(" ") ||
+        name[0].length < 3 ||
+        name[1].length < 3 ||
+        fullName
+          .split("")
+          .some((element) =>
+            ["!", "#", "$", "%", "^", "&", "*", "@", "("].includes(element)
+          )
+      ) {
+        alert(
+          "Please enter your full name (min 3 char)-> first_name last_name"
+        );
+        return false;
+      }
+      if (
+        !email ||
+        email.length < 3 ||
+        !email.includes("@") ||
+        email
+          .split("")
+          .some((element) =>
+            ["!", "#", " ", "$", "%", "^", "&", "*"].includes(element)
+          )
+      ) {
+        alert("Please enter a valid email id with min 3 char");
+        return false;
+      } else {
+        return true;
+      }
+    } catch (error) {
+      console.error(
+        `Exception received :: Tables.js :: userValidation :: error name :: ${error.name}, error message :: `,
+        error.message
+      );
+      invokeError(error);
     }
   };
 
@@ -81,25 +103,33 @@ const Tables = (props) => {
    * Params - None
    */
   const addUserHandler = () => {
-    let isValidate = userValidation();
-    if (isValidate) {
-      let name = fullName.split(" ");
-      let newUser = {
-        id: props.tableData.length + 1,
-        email: email,
-        first_name: name[0],
-        last_name: name[1],
-        avatar: url
-          ? url
-          : "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=740&t=st=1664976045~exp=1664976645~hmac=51805a2d7bbafe5eafbefe9377d4e65dc058d1bb6e33c180dea0c5c6f6807dc9",
-      };
-      console.log(`Table.js :: addUserHandler :: newUser`, newUser);
-      props.setNewUser(newUser);
-      setEmail("");
-      setUrl("");
-      setFullName("");
-    } else {
-      console.log("Table.js :: addUserHandler :: Validation failed");
+    try {
+      let isValidate = userValidation();
+      if (isValidate) {
+        let name = fullName.split(" ");
+        let newUser = {
+          id: props.tableData.length + 1,
+          email: email,
+          first_name: name[0],
+          last_name: name[1],
+          avatar: url
+            ? url
+            : "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=740&t=st=1664976045~exp=1664976645~hmac=51805a2d7bbafe5eafbefe9377d4e65dc058d1bb6e33c180dea0c5c6f6807dc9",
+        };
+        console.log(`Table.js :: addUserHandler :: newUser`, newUser);
+        props.setNewUser(newUser);
+        setEmail("");
+        setUrl("");
+        setFullName("");
+      } else {
+        console.log("Table.js :: addUserHandler :: Validation failed");
+      }
+    } catch (error) {
+      console.error(
+        `Exception received :: Tables.js :: addUserHandler :: error name :: ${error.name}, error message :: `,
+        error.message
+      );
+      invokeError(error);
     }
   };
   return (
@@ -176,7 +206,7 @@ const Tables = (props) => {
                     </th>
                     <td>{element.id}</td>
                     <td>{element.first_name + " " + element.last_name}</td>
-                    <td>@{element.email}</td>
+                    <td>{element.email}</td>
                   </tr>
                 );
               })}

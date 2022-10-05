@@ -3,6 +3,7 @@ import Tables from "./components/Tables";
 import { useState, useEffect } from "react";
 import NavBar from "./components/NavBar";
 import Sort from "./components/Sort";
+import ErrorComponent from "./components/ErrorComponent";
 
 function App() {
   // const tableData = {
@@ -74,7 +75,24 @@ function App() {
 
   console.log(`App.js :: main :: newUser`, newUser);
 
+  /**
+   * Hooks Section name - useState hooks to manage errors
+   * useState Hooks for  -isError | errMssg
+   */
+  const [isError, setIsError] = useState(false);
+  const [errMssg, setErrMssg] = useState("");
+
+  /**
+   * Hooks Section name - useState hooks for dark theme
+   * useState Hooks for  - mode - will check if current mode is dark or light
+   */
   const [mode, setMode] = useState("light");
+
+  /**
+   * Function name - handleToggleMode
+   * Function work - Toggle theme from dark to light and vice-versa based on current theme
+   * Params - NA
+   */
   const handleToggleMode = () => {
     if (mode === "light") {
       setMode("dark");
@@ -172,38 +190,47 @@ function App() {
    * Params - {boolean} - isReverse - if array to be sorted in increasing order then false and for decreasing order true
    */
   const sortFields = (arr, field, isReverse = false) => {
-    let fieldValues = [];
+    try {
+      let fieldValues = [];
 
-    arr.forEach((element) => {
-      console.log(`App.js :: sortFields :: element.field `, element[field]);
-      fieldValues.push(element[field]);
-    });
+      arr.forEach((element) => {
+        console.log(`App.js :: sortFields :: element.field `, element[field]);
+        fieldValues.push(element[field]);
+      });
 
-    if (field === "id") {
-      fieldValues.sort((a, b) => a - b);
-    } else {
-      fieldValues.sort();
-    }
-
-    if (isReverse) {
-      console.log("Reverse called", isReverse);
-      fieldValues.reverse();
-    }
-
-    console.log(`App.js :: sortFields :: fieldValues `, fieldValues);
-    let sortedArray = [];
-
-    fieldValues.forEach((element, index) => {
-      for (let i = 0; i < arr.length; i++) {
-        if (element === arr[i][field]) {
-          sortedArray.push(arr[i]);
-        }
+      if (field === "id") {
+        fieldValues.sort((a, b) => a - b);
+      } else {
+        fieldValues.sort();
       }
-    });
 
-    console.log(`App.js :: sortFields :: sortedArray `, sortedArray);
-    setUserlist(sortedArray);
-    return sortedArray;
+      if (isReverse) {
+        console.log("Reverse called", isReverse);
+        fieldValues.reverse();
+      }
+
+      console.log(`App.js :: sortFields :: fieldValues `, fieldValues);
+      let sortedArray = [];
+
+      fieldValues.forEach((element, index) => {
+        for (let i = 0; i < arr.length; i++) {
+          if (element === arr[i][field]) {
+            sortedArray.push(arr[i]);
+          }
+        }
+      });
+
+      console.log(`App.js :: sortFields :: sortedArray `, sortedArray);
+      setUserlist(sortedArray);
+      return sortedArray;
+    } catch (error) {
+      console.error(
+        `Exception received :: App.js :: sortFields :: error name :: ${error.name}, error message :: `,
+        error.message
+      );
+      setIsError(true);
+      setErrMssg(error.message);
+    }
   };
 
   /**
@@ -213,40 +240,52 @@ function App() {
    * Params - {array} - userlist - list of users to be sorted
    */
   const sortData = (option, userlist) => {
-    switch (option) {
-      case "Sort by id INC":
-        sortFields(userlist, "id", false);
+    try {
+      switch (option) {
+        case "Sort by id INC":
+          sortFields(userlist, "id", false);
 
-        break;
+          break;
 
-      case "Sort by id DEC":
-        sortFields(userlist, "id", true);
+        case "Sort by id DEC":
+          sortFields(userlist, "id", true);
 
-        break;
+          break;
 
-      case "Sort by name INC":
-        sortFields(userlist, "first_name", false);
+        case "Sort by name INC":
+          sortFields(userlist, "first_name", false);
 
-        break;
+          break;
 
-      case "Sort by name DEC":
-        sortFields(userlist, "first_name", true);
+        case "Sort by name DEC":
+          sortFields(userlist, "first_name", true);
 
-        break;
+          break;
 
-      case "Sort by email INC":
-        sortFields(userlist, "email", false);
+        case "Sort by email INC":
+          sortFields(userlist, "email", false);
 
-        break;
+          break;
 
-      case "Sort by email DEC":
-        sortFields(userlist, "email", true);
+        case "Sort by email DEC":
+          sortFields(userlist, "email", true);
 
-        break;
+          break;
 
-      default:
-        sortFields(userlist, "id", false);
-        break;
+        default:
+          sortFields(userlist, "id", false);
+          break;
+      }
+      // throw new Error(
+      //   "Error world : Manually created error to test error handling"
+      // );
+    } catch (error) {
+      console.error(
+        `Exception received :: App.js :: sortData :: error name :: ${error.name}, error message :: `,
+        error.message
+      );
+      setIsError(true);
+      setErrMssg(error.message);
     }
   };
 
@@ -263,6 +302,7 @@ function App() {
     <div>
       <NavBar mode={mode} toggleMode={handleToggleMode} />
       <h1 className="text-center my-3">User List</h1>
+      {isError && <ErrorComponent isError={isError} errMssg={errMssg} />}
       <div className="container my-4">
         <Sort setSelectedOptionValue={setSelectedOptionValue} />
         <Tables
@@ -270,6 +310,8 @@ function App() {
           selectedOptionValue={selectedOptionValue}
           setNewUser={setNewUser}
           mode={mode}
+          setIsError={setIsError}
+          setErrMssg={setErrMssg}
         />
       </div>
     </div>
