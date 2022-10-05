@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 
 const Sort = (props) => {
-  const sortOptionHandler = (event) => {
-    console.log(event.target.value);
-    console.log(options[event.target.value]);
-    setSelectedOption(options[event.target.value]);
-    props.setSelectedOptionValue(options[event.target.value]);
-  };
-
   let options = [
     "Sort by id INC",
     "Sort by id DEC",
@@ -16,11 +9,31 @@ const Sort = (props) => {
     "Sort by email INC",
     "Sort by email DEC",
   ];
-
+  /**
+   * Hooks Section name - useState hooks for the component
+   * useState Hooks for  -selectedOption - value selected in sort type dropdown
+   */
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  /**
+   * Function name - sortOptionHandler
+   * Function work - get the value of type of sort selected by user, to be performed in the table list
+   * Params - {object} - event - the event for dropdown with different types of sort
+   */
+  const sortOptionHandler = (event) => {
+    console.log(
+      `Sort.js :: sortOptionHandler :: event.target.value`,
+      event.target.value
+    );
+    console.log(
+      `Sort.js :: sortOptionHandler :: options[event.target.value]`,
+      options[event.target.value]
+    );
+    setSelectedOption(options[event.target.value]);
+    props.setSelectedOptionValue(options[event.target.value]);
+  };
 
   return (
-    <div>
+    <div className="align">
       <label htmlFor="sort">Sort table items</label>
       <select
         name="sort"

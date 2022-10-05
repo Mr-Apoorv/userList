@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 
 const Tables = (props) => {
-  console.log(`Table.js :: main :: props.tableData`, props.tableData);
+  // console.log(`Table.js :: main :: props.tableData`, props.tableData);
   // console.log(
   //   `props.tableData.data[props.tableData.data.length - 1]`,
   //   props.tableData.data[props.tableData.data.length - 1]
   // );
+
+  /**
+   * Hooks Section name - useState hooks for the component
+   * useState Hooks for  - url | fullName | email - values entered in the input elements for url, fullname and email
+   */
   const [url, setUrl] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
 
+  /**
+   * Function name - formUrlHandler | formNameHandler | formEmailHandler
+   * Function work - change the input fields value to the keyboard input entered by user
+   * Params - {object} - event - event received when keyboard input given by user
+   */
   const formUrlHandler = (event) => {
     setUrl(event.target.value);
   };
@@ -19,8 +29,15 @@ const Tables = (props) => {
   const formEmailHandler = (event) => {
     setEmail(event.target.value);
   };
+
+  /**
+   * Function name - userValidation
+   * Function work - Validation criteria for the different input fields for adding user
+   * Return - If all validation passes then return true else false
+   * Params - None
+   */
   const userValidation = () => {
-    if (!url || url.slice(0, 4) !== "http") {
+    if (url && url.slice(0, 4) !== "http") {
       alert("Please enter a valid url Ex - http://xyz....");
       return false;
     }
@@ -57,16 +74,24 @@ const Tables = (props) => {
       return true;
     }
   };
+
+  /**
+   * Function name - addUserHandler
+   * Function work - Will first check validation of input fields and then create newUser object
+   * Params - None
+   */
   const addUserHandler = () => {
     let isValidate = userValidation();
     if (isValidate) {
       let name = fullName.split(" ");
       let newUser = {
-        id: Math.ceil(Math.random() * 100),
+        id: props.tableData.length + 1,
         email: email,
         first_name: name[0],
         last_name: name[1],
-        avatar: url,
+        avatar: url
+          ? url
+          : "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=740&t=st=1664976045~exp=1664976645~hmac=51805a2d7bbafe5eafbefe9377d4e65dc058d1bb6e33c180dea0c5c6f6807dc9",
       };
       console.log(`Table.js :: addUserHandler :: newUser`, newUser);
       props.setNewUser(newUser);
@@ -74,27 +99,33 @@ const Tables = (props) => {
       setUrl("");
       setFullName("");
     } else {
-      console.log("Validation failed");
+      console.log("Table.js :: addUserHandler :: Validation failed");
     }
   };
   return (
     <div>
-      <h1>User List</h1>
-      <button
-        type="button"
-        className="btn btn-dark my-3"
-        onClick={addUserHandler}
-      >
-        Add User
-      </button>
+      <div className="container text-left">
+        <button
+          type="button"
+          className="btn btn-dark my-3"
+          onClick={addUserHandler}
+        >
+          Add User
+        </button>
+        <span className="mx-3">
+          <strong>Instructions : </strong>* fields are mandatory while creating
+          a new user
+        </span>
+      </div>
+
       {props.tableData && (
         <table className="table table-bordered border-dark">
           <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">Profile Pic</th>
               <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
+              <th scope="col">Name *</th>
+              <th scope="col">Email *</th>
             </tr>
           </thead>
           <tbody>
@@ -132,7 +163,11 @@ const Tables = (props) => {
                 return (
                   <tr key={element.id}>
                     <th scope="row">
-                      <img src={element.avatar} alt="Profile pic"></img>
+                      <img
+                        src={element.avatar}
+                        alt="Profile pic"
+                        style={{ height: "128px", width: "128px" }}
+                      ></img>
                     </th>
                     <td>{element.id}</td>
                     <td>{element.first_name + " " + element.last_name}</td>
